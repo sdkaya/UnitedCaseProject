@@ -12,7 +12,7 @@ using UnitedCase.Services.IServices;
 
 namespace UnitedCase.Services.Services
 {
-    public class MainNoteService:IMainNoteService
+    public class MainNoteService : IMainNoteService
     {
 
         private readonly IMainNoteRepository _mainNoteRepository;
@@ -57,6 +57,14 @@ namespace UnitedCase.Services.Services
                 note.IsActive = false;
 
                 await _mainNoteRepository.Update(note);
+                var childList = await _childNoteRepository.FindBy(x => x.MainNoteId == id).ToListAsync();
+
+                foreach (var item in childList)
+                {
+                    item.IsActive = false;
+                    await _childNoteRepository.Update(item);
+                }
+
                 return new Response<bool>() { isSuccess = true, Data = true, List = null, Message = "Success", Status = 200 };
             }
             catch (Exception ex)
@@ -84,8 +92,8 @@ namespace UnitedCase.Services.Services
                         var childDto = new ChildNoteDto()
                         {
                             Id = item2.Id,
-                            MainId=item.Id,
-                            Note=item2.Note   
+                            MainId = item.Id,
+                            Note = item2.Note
                         };
                         childNoteDtoList.Add(childDto);
                     }
