@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UnitedCase.Common\UnitedCase.Common.csproj" />
+    <ProjectReference Include="..\UnitedCase.Repository\UnitedCase.Repository.csproj" />
+  </ItemGroup>
+
 </Project>
