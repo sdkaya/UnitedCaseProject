@@ -1,0 +1,41 @@
+﻿
+<form>
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+        <label class="form-label"> Note </label>
+        <input type="text" id="NoteInput" class="form-control" />
+
+    </div>
+
+    <!-- Submit button -->
+    <div class="form-outline mb-12">
+        <button type="button" onclick="CreateNote()" class="btn btn-primary btn-block mb-12"> Add </button>
+    </div>
+</form>
+<script>
+        function CreateNote(){
+        debugger;
+        var note = $('#NoteInput').val();
+        if(note == null){
+            return;
+        }
+
+        $.ajax({
+
+        url : '/Home/AddMainNote',
+        type : 'POST',
+        data : {
+            'note' : note
+        },
+        dataType:'json',
+        success : function(data) {
+
+        },
+        error : function(request,error)
+        {
+
+        }
+    });
+        }
+
+</script>

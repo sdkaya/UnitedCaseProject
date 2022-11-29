@@ -10,7 +10,7 @@ namespace UnitedCase.Services.IServices
 {
     public interface IMainNoteService
     {
-        Task<Response<bool>> CreateMainNote(CreateMainNoteDto createMainNoteDto);
+        Task<Response<bool>> CreateMainNote(string note);
         Task<Response<bool>> DeleteMainNote(int id);
         Task<Response<GetNoteListDto>> GetAllNotes();
     }

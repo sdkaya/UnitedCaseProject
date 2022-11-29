@@ -1,8 +1,149 @@
-﻿@{
+﻿@using UnitedCase.Common.DTO
+@model List<GetNoteListDto>
+
+@{
+
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Remove default bullets */
+    ul, #myUL {
+        list-style-type: none;
+    }
+
+    /* Remove margins and padding from the parent ul */
+    #myUL {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Style the caret/arrow */
+    .caret {
+        cursor: pointer;
+        user-select: none; /* Prevent text selection */
+    }
+
+        /* Create the caret/arrow with a unicode, and style it */
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+    .caret-down::before {
+        transform: rotate(90deg);
+    }
+
+    /* Hide the nested list */
+    .nested {
+        display: none;
+    }
+
+    /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+    .active {
+        display: block;
+    }
+</style>
+
+
+
+@foreach (var item in Model)
+{
+    <ul id="myUL">
+        <li>
+            <span class="caret">
+                @item.Note   <button onclick="SetMainId(@item.Id)" type="button"style="font-size:12px" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Add Child Note
+                </button>
+            </span>
+            <ul class="nested">
+                @foreach (var item2 in item.ChildNotes)
+                {
+
+                    <li>@item2.Note</li>
+
+
+                }
+            </ul>
+        </li>
+    </ul>
+    <br />
+}
+
+
+
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Child Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <input type="text" id="childNoteId"/>
+     
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="AddChildNote()" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    var currentMainNoteId;
+
+
+        var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+      toggler[i].addEventListener("click", function() {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+      });
+    }
+
+
+    function SetMainId(id)
+    {
+        currentMainNoteId = id;
+    }
+    function  AddChildNote()
+    {
+
+        var note = $('#childNoteId').val();
+        
+        var data = {
+            'Note' : note,
+            'MainNoteId' :currentMainNoteId
+
+        }
+
+         $.ajax({
+
+        url : '/Home/AddChildNote',
+        type : 'POST',
+        data : data ,
+        dataType:'json',
+        success : function(data) {
+            location.reload();
+        },
+        error : function(request,error)
+        {
+
+        }
+    });
+
+
+    }
+
+</script>

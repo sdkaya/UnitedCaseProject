@@ -24,17 +24,17 @@ namespace UnitedCase.Services.Services
             _childNoteRepository = childNoteRepository;
         }
 
-        public async Task<Response<bool>> CreateMainNote(CreateMainNoteDto createMainNoteDto)
+        public async Task<Response<bool>> CreateMainNote(string note)
         {
             try
             {
-                var note = new MainNote()
+                var mainNote = new MainNote()
                 {
-                    Note = createMainNoteDto.Note,
+                    Note = note,
                     CreateDate = DateTime.Now,
                     IsActive = true
                 };
-                await _mainNoteRepository.InsertAsync(note);
+                await _mainNoteRepository.InsertAsync(mainNote);
                 return new Response<bool>() { isSuccess = true, Data = true, List = null, Message = "Success", Status = 200 };
 
             }
@@ -78,13 +78,14 @@ namespace UnitedCase.Services.Services
         {
             try
             {
-                var childNoteDtoList = new List<ChildNoteDto>();
+                
                 var list = new List<GetNoteListDto>();
                 var allMainNote = await _mainNoteRepository.FindBy(x => x.IsActive == true).ToListAsync();
                 var allChildNote = await _childNoteRepository.FindBy(x => x.IsActive == true).ToListAsync();
 
                 foreach (var item in allMainNote)
                 {
+                    var childNoteDtoList = new List<ChildNoteDto>();
                     var childNote = allChildNote.Where(x => x.MainNoteId == item.Id).ToList();
 
                     foreach (var item2 in childNote)
