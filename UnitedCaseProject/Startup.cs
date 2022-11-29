@@ -10,6 +10,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnitedCase.Repository;
+using UnitedCase.Repository.IRepository;
+using UnitedCase.Repository.Repository;
+using UnitedCase.Services.IServices;
+using UnitedCase.Services.Services;
 
 namespace UnitedCaseProject
 {
@@ -25,7 +29,12 @@ namespace UnitedCaseProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+          
+            services.AddTransient<IMainNoteService, MainNoteService>();
+            services.AddTransient<IChildNoteService, ChildNoteService>();
+            services.AddTransient<IMainNoteRepository, MainNoteRepository>();
+            services.AddTransient<IChildNoteRepository, ChildNoteRepository>();
 
             services.AddDbContext<UnitedCaseProjectDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("Connection")));
