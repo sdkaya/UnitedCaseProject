@@ -48,33 +48,41 @@
     }
 </style>
 
-
+@if(Model.Count()>0){
 
 @foreach (var item in Model)
 {
     <ul id="myUL">
         <li>
             <span class="caret">
-                @item.Note   <button onclick="SetMainId(@item.Id)" type="button"style="font-size:12px" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                @item.Note   <button onclick="SetMainId(@item.Id)" type="button" style="font-size:12px" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                     Add Child Note
+                </button>
+                <button onclick="DeleteMainId(@item.Id)" type="button" style="font-size:12px" class="btn btn-danger">
+                    Delete Main Note
                 </button>
             </span>
             <ul class="nested">
                 @foreach (var item2 in item.ChildNotes)
                 {
-
-                    <li>@item2.Note</li>
-
-
+                    <li class= "mb-2">
+                        @item2.Note <button onclick="DeleteChildId(@item2.Id)" type="button" style="font-size:10px" class="btn btn-danger">
+                            Delete Child Note
+                        </button>
+                    </li>
+                   
                 }
+
             </ul>
         </li>
     </ul>
-    <br />
+   <br />
+    }
 }
-
-
-
+else
+{
+    <h1>No Note Found.</h1>
+}
 <!-- Button trigger modal -->
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -87,8 +95,8 @@
                 </button>
             </div>
             <div class="modal-body">
-               <input type="text" id="childNoteId"/>
-     
+                <input type="text" id="childNoteId"/>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -111,8 +119,37 @@
         this.classList.toggle("caret-down");
       });
     }
+    function DeleteMainId(id)
+    {
+        $.ajax({
+        url : '/Home/DeleteMainNote',
+        type : 'POST',
+        data : {"id":id},
+        dataType:'json',
+        success : function(data) {
+            location.reload();
+        },
+        error : function(request,error)
+        {
+        }
+        });
+     }
 
-
+     function DeleteChildId(id)
+     {
+        $.ajax({
+        url : '/Home/DeleteChildNote',
+        type : 'POST',
+        data : {"id":id},
+        dataType:'json',
+        success : function(data) {
+            location.reload();
+        },
+        error : function(request,error)
+        {
+        }
+    });
+    }
     function SetMainId(id)
     {
         currentMainNoteId = id;
@@ -121,7 +158,7 @@
     {
 
         var note = $('#childNoteId').val();
-        
+
         var data = {
             'Note' : note,
             'MainNoteId' :currentMainNoteId
@@ -142,7 +179,6 @@
 
         }
     });
-
 
     }
 

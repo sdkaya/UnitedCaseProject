@@ -56,6 +56,27 @@ namespace UnitedCaseProject.Controllers
                 return Json(new { response = false });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteMainNote(int id)
+        {
+            var result = await _mainNoteService.DeleteMainNote(id);
+
+            if (result.isSuccess)
+                return Json((new { response = true }));
+            else
+                return Json(new { response = false });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteChildNote(int id)
+        {
+            var result = await _childNoteService.DeleteChildNote(id);
+
+            if (result.isSuccess)
+                return Json((new { response = true }));
+            else
+                return Json(new { response = false });
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

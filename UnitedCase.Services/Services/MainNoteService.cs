@@ -74,6 +74,29 @@ namespace UnitedCase.Services.Services
 
         }
 
+        public async Task<Response<bool>> DeleteChildNote(int id)
+        {
+            try
+            {
+                var note = await _childNoteRepository.FindBy(x => x.Id == id).FirstOrDefaultAsync();
+
+                if (note == null)
+                {
+                    throw new Exception("Note could not found!");
+                }
+
+                note.IsActive = false;
+
+                await _childNoteRepository.Update(note);
+
+                return new Response<bool>() { isSuccess = true, Data = true, List = null, Message = "Success", Status = 200 };
+            }
+            catch (Exception ex)
+            {
+                return new Response<bool>() { isSuccess = false, Data = false, List = null, Message = ex.Message, Status = 500 };
+            }
+
+        }
         public async Task<Response<GetNoteListDto>> GetAllNotes()
         {
             try
