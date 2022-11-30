@@ -14,7 +14,6 @@
 </form>
 <script>
         function CreateNote(){
-        debugger;
         var note = $('#NoteInput').val();
         if(note == null){
             return;
@@ -29,7 +28,8 @@
         },
         dataType:'json',
         success : function(data) {
-
+            alert("Note Added Succesfuly");
+            $('#NoteInput').val("");
         },
         error : function(request,error)
         {
